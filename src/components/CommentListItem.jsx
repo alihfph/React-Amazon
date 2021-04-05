@@ -71,4 +71,8 @@ export default class CommentListItem extends Component {
       </li>
     )
   }
+  componentWillUnmount (){
+    console.log("This coment has been removeds")
+
+  }
 }

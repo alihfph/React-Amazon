@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Row, Col,Badge} from 'react-bootstrap';
+import { Row, Col,Badge, Container} from 'react-bootstrap';
 import CommentList from './CommentList.jsx'
 
 
@@ -10,16 +10,17 @@ class BookDetails extends Component {
   }
   render() {
     return (
+      <Container>
       <Row>
         {this.props.book ?
         <>
         <Col md={6}>
-          <image src={this.props.book.img} flueid />
+          <image src={this.props.book.img} fluid />
         </Col>
         <Col md={6}>
-         <h1>
+         <div>
            {this.props.book.title}<Badge variant="secondary">{this.props.book.category}</Badge><Badge variant="warning">{this.props.book.price}</Badge>
-         </h1>
+         </div>
         <CommentList comments ={this.state.comments} 
          bookId={this.props.book.asin} 
          onNewComment={this.onNewComment} 
@@ -32,6 +33,7 @@ class BookDetails extends Component {
         <div>click here</div>
         }
       </Row>
+      </Container>
     );
   }
   
@@ -57,11 +59,40 @@ class BookDetails extends Component {
     })
 
   }
-
-
+  componentDidUpdate = async (prevProps, prevState, snapshot)=>{
+    if(this.props.book &&  (!prevProps.book || (prevProps.book.asin !== this.props.book.asin))){
+    const resp = await fetch("https://striveschool-api.herokuapp.com/api/comments/" + this.props.book.asin, {
+      headers: {
+      "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MDUxZWJkYjg5YzI2ZjAwMTU3ZjljMjkiLCJpYXQiOjE2MTc1NzQxNDQsImV4cCI6MTYxODc4Mzc0NH0.MviRubLP9zvIhFuKQr8AuWvbW4ZUc-pIv0sRhdifT6Q"
+      }
+      })
+    
+      const comments = await resp.json()
+      console.log(comments)
+      this.setState({
+        comments:comments
+      })
+    
+  }
+  }
+  // componentDidUpdate= async (prevProps, prevState, snapshot)=>{
+  //   if(this.props.book &&  (!prevProps.book || (prevProps.book.asin !== this.props.boon.asin))){
+  //    const resp= await fetch("https://striveschool-api.herokuapp.com/api/comments/" + this.props.book.asin, {
+  //     headers: {
+  //     "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MDUxZWJkYjg5YzI2ZjAwMTU3ZjljMjkiLCJpYXQiOjE2MTc1NzQxNDQsImV4cCI6MTYxODc4Mzc0NH0.MviRubLP9zvIhFuKQr8AuWvbW4ZUc-pIv0sRhdifT6Q"
+  //     }
+  //     }
+  //     )
+  //   }
+  //     const comments = await resp.json()
+  //     console.log(comments)
+  //     this.setState({
+  //       comments:comments
+  //     })
+  // }
   componentDidMount = async ()=>{
     if(this.props.book) {
-    const resp = await fetch("https://striveschool-api.herokuapp.com/api/comments/" + this.props.bookInfo.asin, {
+    const resp = await fetch("https://striveschool-api.herokuapp.com/api/comments/" + this.props.book.asin, {
       headers: {
       "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MDUxZWJkYjg5YzI2ZjAwMTU3ZjljMjkiLCJpYXQiOjE2MTc1NzQxNDQsImV4cCI6MTYxODc4Mzc0NH0.MviRubLP9zvIhFuKQr8AuWvbW4ZUc-pIv0sRhdifT6Q"
       }
