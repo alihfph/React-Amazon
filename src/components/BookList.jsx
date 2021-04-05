@@ -1,11 +1,13 @@
 import React, { Component } from 'react'
 import BookListItem from './BookListItem'
 import { Row , FormControl} from 'react-bootstrap'
+import BookDetails from './BookDetails.jsx'
 
 export default class BookList extends Component {
   state = {
     books : [],
-    search: ""
+    search: "",
+    selectedBook: undefined
   }
   render() {
     return (
@@ -17,12 +19,16 @@ export default class BookList extends Component {
           value = {this.state.search}
           onChange={(e)=> this.setState({ search: e.currentTarget.value.toLowerCase() })}
         ></FormControl>
+        <BookDetails  book={this.state.selectedBook}/>
 
        <div>
          {this.state.books
          .filter(book=> book.title.toLowerCase().indexOf(this.state.search) !== -1)
          .map(book=> 
-         <BookListItem bookInfo={book} onSearchChange={newSearchValue=> this.setState({search:newSearchValue})}/>)}
+         <BookListItem bookInfo={book} key={book.asin}
+         onSearchChange={newSearchValue=> this.setState({search:newSearchValue})}
+         onBookSelected={(book)=>this.setState({selectedBook:book})}  
+         />)}
        </div>
        </Row> 
       </>
