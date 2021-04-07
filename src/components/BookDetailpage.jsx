@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import { Row, Col,Badge, Image} from 'react-bootstrap';
+import { Row, Col,Badge, Image, Spinner} from 'react-bootstrap';
 import CommentList from './CommentList.jsx'
-import {withRouter} from 'react-router-dom'
+import {withRouter, Link } from 'react-router-dom'
 import SimilarBooks from './SimilarBooks.jsx'
 
 
@@ -9,13 +9,21 @@ import SimilarBooks from './SimilarBooks.jsx'
 class BookDetailspagepage extends Component {
   state ={
     comments:[],
-    book : undefined
-  }
+    book : undefined,
+    isLoading: false,
+    similarbooks:undefined 
+    }
   render() {
     const {book} = this.state
     return (
     <>
+    <Link to="/home">Go to HomePage</Link>
       <Row>
+      {this.state.isLoading && (
+      <div className="Justify-content-center ">
+        <Spinner animation="border" variant="success" />
+      </div>
+    )}
         {book ?
         <>
         <Col md={6}>
@@ -40,6 +48,7 @@ class BookDetailspagepage extends Component {
       <Row>
         <SimilarBooks book={this.state.similarbooks}/>
       </Row>
+    
     </>
     );
   }
@@ -98,6 +107,9 @@ class BookDetailspagepage extends Component {
   //     })
   // }
   componentDidMount = async ()=>{
+    this.setState({
+      isLoading: true
+    });
     console.log(this.props)
     const asin = this.props.match.params.asin
     
@@ -113,21 +125,25 @@ class BookDetailspagepage extends Component {
         "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MDUxZWJkYjg5YzI2ZjAwMTU3ZjljMjkiLCJpYXQiOjE2MTc1NzQxNDQsImV4cCI6MTYxODc4Mzc0NH0.MviRubLP9zvIhFuKQr8AuWvbW4ZUc-pIv0sRhdifT6Q"
         }
         })
-        let book = undefined
+        
         let similarbooks = []
       if (resp.ok){
         const books = await resp.json()
         const book =books.find(b=> b.asin === asin)
-        similarbooks =books.filter(b=> b.asin === book.category).slice(0,7)
-        console.log(books)
+        similarbooks =books.filter(b=> b.asin === books.category).slice(0,7)
+        console.log(similarbooks)
         this.setState({
           books:books,
-          book:book
+          book:book,
+          similarbooks: similarbooks 
         })
       }
       console.log(comments)
       this.setState({
         comments:comments
+      })
+      this.setState({
+        isLoading: false,
       })
     
   }

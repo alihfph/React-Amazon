@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Row, Col,Badge, Container, Image} from 'react-bootstrap';
+import { Row, Col, Badge, Image} from 'react-bootstrap';
 import CommentList from './CommentList.jsx'
 
 
