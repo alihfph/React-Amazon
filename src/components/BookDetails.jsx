@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Row, Col,Badge, Container} from 'react-bootstrap';
+import { Row, Col,Badge, Container, Image} from 'react-bootstrap';
 import CommentList from './CommentList.jsx'
 
 
@@ -10,12 +10,11 @@ class BookDetails extends Component {
   }
   render() {
     return (
-      <Container>
       <Row>
         {this.props.book ?
         <>
         <Col md={6}>
-          <image src={this.props.book.img} fluid />
+          <Image src={this.props.book.img} fluid />
         </Col>
         <Col md={6}>
          <div>
@@ -33,7 +32,6 @@ class BookDetails extends Component {
         <div>click here</div>
         }
       </Row>
-      </Container>
     );
   }
   
